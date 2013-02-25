@@ -167,3 +167,12 @@ def first_true(iterable):
     if true_values:
         return true_values[0]
     return None
+
+
+def subkey(dct, keys):
+    """Get an entry from a dict of dicts by the list of keys to 'follow'
+    """
+    key = keys[0]
+    if len(keys) == 1:
+        return dct[key]
+    return subkey(dct[key], keys[1:])
