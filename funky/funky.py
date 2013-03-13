@@ -1,7 +1,7 @@
 # Python imports
 import operator
 import time
-from functools import wraps
+from functools import wraps, partial
 
 
 # Constants
@@ -138,6 +138,10 @@ class Memoizer(object):
             value = self.func(*args, **kwargs)
             self.set_cache(cache_key, value)
         return self.get_cache(cache_key)
+
+    def __get__(self, obj, objtype):
+        """Support instance methods."""
+        return partial(self.__call__, obj)
 
 
 class TimedMemoizer(Memoizer):
