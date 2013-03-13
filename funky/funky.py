@@ -1,5 +1,6 @@
 # Python imports
 import operator
+import time
 from functools import wraps
 
 
@@ -125,6 +126,9 @@ class Memoizer(object):
     def set_cache(self, cache_key, value):
         self.cache[cache_key] = value
 
+    def del_cache(self, cache_key):
+        del self.cache[cache_key]
+
     def clear(self):
         self.cache = {}
 
@@ -136,10 +140,42 @@ class Memoizer(object):
         return self.get_cache(cache_key)
 
 
+class TimedMemoizer(Memoizer):
+    def __init__(self, func, ttl):
+        self.timestamps = {}
+        self.ttl = ttl
+        super(TimedMemoizer, self).__init__(func)
+
+    def is_alive(self, cache_key):
+        time_diff = time.time() - self.timestamps[cache_key]
+        return time_diff < self.ttl
+
+    def has_cache(self, cache_key):
+        return super(TimedMemoizer, self).has_cache(cache_key) and self.is_alive(cache_key)
+
+    def set_cache(self, cache_key, value):
+        self.timestamps[cache_key] = time.time()
+        return super(TimedMemoizer, self).set_cache(cache_key, value)
+
+    def del_cache(self, cache_key):
+        self.tinestamps[cache_key]
+        return super(TimedMemoizer, self).del_cache(cache_key)
+
+    def clear(self):
+        self.timestamps = {}
+        return super(TimedMemoizer, self).clear()
+
+
 # Cache calls
 def memoize(func):
     """Cache a functions output for a given set of arguments"""
     return wraps(func)(Memoizer(func))
+
+
+def timed_memoize(ttl):
+    def wrapper(func):
+        return wraps(func)(TimedMemoizer(func, ttl))
+    return wrapper
 
 
 def transform(transform_func):
