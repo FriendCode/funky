@@ -108,8 +108,11 @@ def arglist_method(func):
 
 class Memoizer(object):
     def __init__(self, func):
+        # Ugly hack but ...
+        self.is_methodified = False
         self.func = func
         self.cache = {}
+        self.class_obj = None
 
     def cache_key(self, args, kwargs):
         sorted_kwargs = kwargs.items()
@@ -141,7 +144,10 @@ class Memoizer(object):
 
     def __get__(self, obj, objtype):
         """Support instance methods."""
-        return partial(self.__call__, obj)
+        if not self.is_methodified:
+            self.func = partial(self.func, obj)
+            self.is_methodified = True
+        return self
 
 
 class TimedMemoizer(Memoizer):
@@ -173,7 +179,7 @@ class TimedMemoizer(Memoizer):
 # Cache calls
 def memoize(func):
     """Cache a functions output for a given set of arguments"""
-    return wraps(func)(Memoizer(func))
+    return Memoizer(func)
 
 
 def timed_memoize(ttl):
