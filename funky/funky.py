@@ -110,6 +110,7 @@ class Memoizer(object):
     def __init__(self, func):
         # Ugly hack but ...
         self.is_methodified = False
+        self.orig_func = func
         self.func = func
         self.cache = {}
         self.class_obj = None
@@ -117,8 +118,8 @@ class Memoizer(object):
     def cache_key(self, args, kwargs):
         sorted_kwargs = kwargs.items()
         sorted_kwargs.sort()
-        cache_key = hash(args + tuple(sorted_kwargs))
-        return cache_key
+        arg_tuple = (self.class_obj,) + args + tuple(sorted_kwargs)
+        return hash(arg_tuple)
 
     def has_cache(self, cache_key):
         return cache_key in self.cache
@@ -144,9 +145,9 @@ class Memoizer(object):
 
     def __get__(self, obj, objtype):
         """Support instance methods."""
-        if not self.is_methodified:
-            self.func = partial(self.func, obj)
-            self.is_methodified = True
+        # Switch main object
+        self.class_obj = obj
+        self.func = partial(self.orig_func, obj)
         return self
 
 
