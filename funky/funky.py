@@ -3,6 +3,7 @@ import operator
 import time
 from functools import wraps, partial
 
+_py_hash = hash
 
 # Constants
 LIST_TYPES = (list, tuple, set)
@@ -201,10 +202,33 @@ def transform(transform_func):
     return decorator
 
 
+def identity(x):
+    return x
+
+
+def hash_dict(obj):
+    return _py_hash(
+        tuple(
+            obj.items()
+        )
+    )
+
+
+def hash(obj):
+    """Supports hashing dictionaires
+    """
+    if isinstance(obj, dict):
+        return hash_dict(obj)
+    return _py_hash(obj)
+
+
 # Useful functions
 
-def unique(collection):
-    return type(collection)(set(collection))
+
+def unique(collection, mapper=hash):
+    return type(collection)({
+        mapper(v): v for v in collection
+    }.values())
 
 
 def true_only(iterable):
