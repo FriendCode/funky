@@ -202,7 +202,9 @@ def transform(transform_func):
 
 
 # Useful functions
-negate = transform(operator.not_)
+
+def unique(collection):
+    return type(collection)(set(collection))
 
 
 def true_only(iterable):
@@ -234,3 +236,8 @@ def subkey(dct, keys):
     if len(keys) == 1:
         return dct[key]
     return subkey(dct[key], keys[1:])
+
+
+# Useful transforms
+negate = transform(operator.not_)
+uniquify = transform(unique)
