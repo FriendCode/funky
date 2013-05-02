@@ -216,6 +216,17 @@ def first_true(iterable):
     return None
 
 
+def pluck_single(key, obj):
+    if isinstance(obj, dict):
+        return obj.get(key)
+    return getattr(obj, key, None)
+
+
+def pluck(collection, attribute_key):
+    extractor = partial(pluck_single, attribute_key)
+    return map(extractor, collection)
+
+
 def subkey(dct, keys):
     """Get an entry from a dict of dicts by the list of keys to 'follow'
     """
