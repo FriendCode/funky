@@ -226,9 +226,10 @@ def hash(obj):
 
 
 def unique(collection, mapper=hash):
-    return type(collection)({
-        mapper(v): v for v in collection
-    }.values())
+    return type(collection)(dict(
+        (mapper(v), v)
+        for v in collection
+    ).values())
 
 
 def true_only(iterable):
