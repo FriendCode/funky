@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# Setup file for dulwich_paramiko
 
 try:
     from setuptools import setup, Extension
@@ -8,7 +7,7 @@ except ImportError:
     from distutils.core import setup, Extension
     has_setuptools = False
 
-version_string = '0.0.1'
+version_string = '0.0.2'
 
 
 setup_kwargs = {}
@@ -17,10 +16,10 @@ setup(name='funky',
       description='A bunch of functionnal tools',
       keywords='tool functionnal pure python funky',
       version=version_string,
-      url='git+ssh://git@friendco.de:friendcode/funky.git',
+      url='https://github.com/FriendCode/funky.git',
       license='MIT',
       author="Aaron O'Mullan",
-      author_email='aaron.omullan@gmail.com',
+      author_email='aaron.omullan@friendco.de',
       long_description="""
       Funky is a package of some useful functionnal constructs for python.
       """,
