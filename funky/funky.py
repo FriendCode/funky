@@ -170,7 +170,7 @@ class TimedMemoizer(Memoizer):
         return super(TimedMemoizer, self).set_cache(cache_key, value)
 
     def del_cache(self, cache_key):
-        self.tinestamps[cache_key]
+        self.timestamps[cache_key]
         return super(TimedMemoizer, self).del_cache(cache_key)
 
     def clear(self):
